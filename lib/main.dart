@@ -5,7 +5,7 @@ import 'screens/to_do_list_items_screen.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: ((context) => AddToDoController()))
+    ChangeNotifierProvider(create: ((context) => TODOProvider()))
   ], child: const MyApp()));
 }
 

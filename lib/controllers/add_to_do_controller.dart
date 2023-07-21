@@ -1,24 +1,63 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_rest_apis/utils/utils.dart';
 import '../model/add_todo_model.dart';
-import '../utils.dart/strings.dart';
 
-class AddToDoController extends ChangeNotifier {
-  void addTodo(
+class TODOProvider extends ChangeNotifier {
+  List<TODOModel> _todos = [];
+
+  List get todos => _todos;
+  Future<void> addTodo(
       {required BuildContext context,
       required bool isCompleted,
-      required TextEditingController titleController,
-      required TextEditingController desController}) async {
-    final title = titleController.text;
-    final desc = desController.text;
-
+      required String title,
+      required String description}) async {
     try {
-      AddTODOModel addTODOModel =
-          AddTODOModel(title, desc, isCompleted, "", "", "");
-
+      TODOModel model = TODOModel(title, description, isCompleted);
       http.Response response = await http.post(
-        Uri.parse('${baseUrl}todos'),
+        Uri.parse('http://api.nstack.in/v1/todos'),
+        body: model.toJson(),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       );
-    } catch (e) {}
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+          response: response,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, 'Your To Do added! Go back to see');
+          });
+      notifyListeners();
+      // ignore: use_build_context_synchronously
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> getTodos(BuildContext context) async {
+    try {
+      final response = await http.get(
+        Uri.parse("http://api.nstack.in/v1/todos?page=1&limit=10"),
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+          response: response,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, "Success");
+
+            final json = jsonDecode(response.body) as Map;
+            final List<dynamic> todoJson = json['items'];
+            _todos = todoJson.map((json) => TODOModel.fromJson(json)).toList();
+          });
+
+      notifyListeners();
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 }

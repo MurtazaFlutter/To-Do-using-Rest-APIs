@@ -1,46 +1,34 @@
 import 'dart:convert';
 
-class AddTODOModel {
+class TODOModel {
   final String title;
-  final String id;
-  final String createdAt;
-  final String updatedAt;
   final String description;
   final bool isCompleted;
 
-  AddTODOModel(
+  TODOModel(
     this.title,
     this.description,
     this.isCompleted,
-    this.id,
-    this.createdAt,
-    this.updatedAt,
   );
 
   Map<String, dynamic> toMap() {
     return {
       'title': title,
-      'id': id,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
       'description': description,
       'isCompleted': isCompleted,
     };
   }
 
-  factory AddTODOModel.fromMap(Map<String, dynamic> map) {
-    return AddTODOModel(
-      map['title'],
-      map['id'],
-      map['createdAt'],
-      map['updatedAt'],
-      map['description'],
-      map['isCompleted'],
+  factory TODOModel.fromMap(Map<String, dynamic> map) {
+    return TODOModel(
+      map['title'] ?? '',
+      map['description'] ?? '',
+      map['isCompleted'] ?? false,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AddTODOModel.fromJson(String source) =>
-      AddTODOModel.fromMap(json.decode(source));
+  factory TODOModel.fromJson(String source) =>
+      TODOModel.fromMap(json.decode(source));
 }

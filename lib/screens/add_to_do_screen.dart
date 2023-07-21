@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import '../widgets/custom_text_field.dart';
+import '../utils/export.dart';
 
 class AddTODOScreen extends StatelessWidget {
   const AddTODOScreen({super.key});
@@ -9,6 +7,15 @@ class AddTODOScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController desController = TextEditingController();
+    final todoProvider = Provider.of<TODOProvider>(context, listen: false);
+    void addToDo() {
+      todoProvider.addTodo(
+          context: context,
+          isCompleted: false,
+          title: titleController.text,
+          description: desController.text);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add TODO'),
@@ -40,7 +47,7 @@ class AddTODOScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
               ),
-              onPressed: () {},
+              onPressed: addToDo,
               child: const Text('Submit'),
             )
           ],
