@@ -8,14 +8,18 @@ import '../model/add_todo_model.dart';
 class TODOProvider extends ChangeNotifier {
   List<TODOModel> _todos = [];
 
-  List get todos => _todos;
+  List<TODOModel> get todos => _todos;
   Future<void> addTodo(
       {required BuildContext context,
       required bool isCompleted,
       required String title,
       required String description}) async {
     try {
-      TODOModel model = TODOModel(title, description, isCompleted);
+      TODOModel model = TODOModel(
+        description: description,
+        isCompleted: isCompleted,
+        title: title,
+      );
       http.Response response = await http.post(
         Uri.parse('http://api.nstack.in/v1/todos'),
         body: model.toJson(),
@@ -48,9 +52,7 @@ class TODOProvider extends ChangeNotifier {
           response: response,
           context: context,
           onSuccess: () {
-            showSnackBar(context, "Success");
-
-            final json = jsonDecode(response.body) as Map;
+            final json = jsonDecode(response.body);
             final List<dynamic> todoJson = json['items'];
             _todos = todoJson.map((json) => TODOModel.fromJson(json)).toList();
           });

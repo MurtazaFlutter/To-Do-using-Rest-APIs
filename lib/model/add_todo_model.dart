@@ -5,30 +5,27 @@ class TODOModel {
   final String description;
   final bool isCompleted;
 
-  TODOModel(
-    this.title,
-    this.description,
-    this.isCompleted,
-  );
+  TODOModel({
+    required this.title,
+    required this.description,
+    required this.isCompleted,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'title': title,
       'description': description,
-      'isCompleted': isCompleted,
+      'is_completed': isCompleted,
     };
   }
 
-  factory TODOModel.fromMap(Map<String, dynamic> map) {
+  factory TODOModel.fromJson(Map<String, dynamic> json) {
     return TODOModel(
-      map['title'] ?? '',
-      map['description'] ?? '',
-      map['isCompleted'] ?? false,
+      description: json['description'] ?? '',
+      isCompleted: json['is_completed'] ?? false,
+      title: json['title'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
-
-  factory TODOModel.fromJson(String source) =>
-      TODOModel.fromMap(json.decode(source));
 }
